@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  web:
+    build: ./
+    image: skobara/clean_marinas
+    container_name: clean_marinas
+    restart: on-failure
+    volumes:
+      - "./:/usr/share/nginx/html"
+    ports:
+      - "8014:80"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.backend=marinas"
+      - "traefik.frontend.rule=Host:geo.gcoos.org;PathPrefixStrip:/marina;"
+      - "traefik.passHostHeader=true"
+      - "traefik.port=80"
+    networks:
+      - geo_net
+
+networks:
+  geo_net:
+    external: true

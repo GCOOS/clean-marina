@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js">
+<!--<![endif]-->
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta http-equiv="Cache-control" content="public">
+  <meta name="description" content="Gulf of Mexico Climate Information">
+  <meta name="author" content="Shin Kobara, GCOOS">
+  <!-- To ensure proper rendering and touch zooming, add the viewport meta tag to your <head>. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- 00 Edit it -->
+  <title>Clean Marinas</title>
+
+  <!-- Core CSS: bootstrap3.3, icons, fontawesome -->
+  <link rel="stylesheet" href="./libs/libs.min.css">
+  <!-- Leaflet and plugin styles -->
+  <link rel="stylesheet" href="./plugin/leaflet-0.7.3/leaflet.css">
+  <!-- Leaflet Plugins: groupedlayercontrol, defaultextent, locate, markercluster, awesome-markers, draw, measurecontrol, timeline, extra-markers -->
+  <link rel="stylesheet" href="./plugin/plugin.min.css">
+  <link rel="stylesheet"
+    href="//cdn-geoweb.s3.amazonaws.com/esri-leaflet-geocoder/1.0.0-rc.4/esri-leaflet-geocoder.css">
+
+  <!-- main css -->
+  <link rel="stylesheet" href="./css/bootmap.min.css">
+
+  <!-- Favicon -->
+  <link rel="apple-touch-icon" sizes="76x76" href="./images/favicon-76.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="./images/favicon-120.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="./images/favicon-152.png">
+  <link rel="icon" sizes="196x196" href="./images/favicon-196.png">
+  <link rel="icon" type="image/x-icon" href="./images/favicon.ico">
+
+</head>
+
+<body class="application">
+  <!--[if lt IE 7]>
+        <p class="chromeframe">You are using an outdated browser. <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+    <![endif]-->
+
+  <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <div class="navbar-icon-container">
+          <a href="#" class="navbar-icon pull-right visible-xs" id="nav-btn"><i class="fa fa-bars fa-lg white"></i></a>
+          <a href="#" class="navbar-icon pull-right visible-xs" id="sidebar-toggle-btn"><i
+              class="fa fa-columns fa-lg white"></i></a>
+        </div>
+        <a class="navbar-brand" href="https://geo.gcoos.org/marina/">
+          <!-- 01 Rename it -->
+          Clean Marinas
+        </a>
+      </div>
+      <div class="navbar-collapse collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="index.html" data-toggle="collapse" data-target=".navbar-collapse.in" id="timeline-btn"><i
+                class="fa fa-map-marker white"></i>&nbsp;&nbsp;Home</a>
+          </li>
+          <li class="dropdown" id="toolList">
+            <a id="toolsDrop" href="#" role="button" class="dropdown-toggle" data-toggle="dropdown"><i
+                class="fa fa-wrench white"></i>&nbsp;&nbsp;Tools <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="#" id="print-btn"><i class="fa fa-print"></i> Print</a>
+              </li>
+              <li>
+                <a href="#" id="tools-btn"><i class="fa fa-edit"></i> Map Tools</a>
+              </li>
+            </ul>
+          </li>
+          <li class="hidden-xs"><a href="#" data-toggle="collapse" data-target=".navbar-collapse.in" id="panel-btn"><i
+                class="fa fa-columns white"></i>&nbsp;&nbsp;Panel</a>
+          </li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="#" data-toggle="collapse" data-target=".navbar-collapse.in" id="about-btn"><i
+                class="fa fa-question-circle white"></i>&nbsp;&nbsp;About</a>
+          </li>
+          <li>
+            <a href="https://products.gcoos.org/">
+              <img src="./images/logo/gcoos_logo_30px.jpg" id="gcoos_logo" />
+            </a>
+          </li>
+        </ul>
+      </div>
+      <!--/.navbar-collapse -->
+    </div>
+  </div>
+
+  <div id="container">
+    <div id="sidebar">
+      <div class="sidebar-wrapper">
+        <div class="panel panel-default" id="features">
+          <div class="panel-heading">
+            <!-- 02 Rename it -->
+            <h3 class="panel-title">Layers
+              <button type="button" class="btn btn-xs btn-default pull-right" id="sidebar-hide-btn"><i
+                  class="fa fa-chevron-left"></i></button>
+            </h3>
+          </div>
+          <div role="tabpanel">
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+              <!-- 03 Rename tabs -->
+              <li role="presentation" class="active"><a href="#sb_tab1" aria-controls="sidebarTab1" role="tab"
+                  data-toggle="tab">Marinas</a></li>
+            </ul>
+            <!-- Tab panes -->
+            <div class="tab-content">
+              <div role="tabpanel" class="tab-pane active modalp" id="sb_tab1">
+                <div class="panel-body">
+                  <div class="row">
+                    <div class="col-xs-8 col-md-8">
+                      <input type="text" class="form-control search" placeholder="Filter" />
+                    </div>
+                    <div class="col-xs-4 col-md-4">
+                      <button type="button" class="btn btn-primary pull-right sort" data-sort="feature-name"
+                        id="sort-btn"><i class="fa fa-sort"></i>&nbsp;&nbsp;Sort</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="sidebar-table">
+                  <table class="table table-hover" id="feature-list">
+                    <thead class="hidden">
+                      <tr>
+                        <th>Icon</th>
+                      <tr>
+                      <tr>
+                        <th>Name</th>
+                      <tr>
+                      <tr>
+                        <th>Chevron</th>
+                      <tr>
+                    </thead>
+                    <tbody class="list"></tbody>
+                  </table>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="map"></div>
+    <form id="search" class="ui-search" role="search">
+      <div class="form-group has-feedback">
+        <input id="searchbox" type="text" placeholder="Search Marina" class="form-control">
+        <span id="searchicon" class="fa fa-search form-control-feedback"></span>
+      </div>
+    </form>
+    <div id='coordinates' class='ui-coordinates'>
+      <code id='mousemove'></code>
+      <br />
+    </div>
+  </div>
+  <div id="loading">
+    <div class="loading-indicator">
+      <div class="progress progress-striped active">
+        <div class="progress-bar progress-bar-info progress-bar-full"></div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Popup Window View -->
+  <div class="modal fade" id="featureModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button class="close" type="button" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title text-primary" id="feature-title"></h4>
+        </div>
+        <div class="modal-body" id="feature-info"></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- /.modal -->
+
+  <!-- Attribution -->
+  <div class="modal fade" id="attributionModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button class="close" type="button" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">
+            <!-- 05 Rename it -->
+            Developed by Shin Kobara - GCOOS
+          </h4>
+        </div>
+        <div class="modal-body">
+          <div id="attribution"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /.modal -->
+
+  <!-- About Modal -->
+  <div class="modal fade" id="aboutModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button class="close" type="button" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <!-- 06 Rename it -->
+          <h4 class="modal-title">About</h4>
+        </div>
+        <div class="modal-body">
+          <ul class="nav nav-tabs" id="aboutTabs">
+            <!-- 07 Rename it if needed -->
+            <li class="active"><a href="#about" data-toggle="tab"><i
+                  class="fa fa-question-circle"></i>&nbsp;Description</a>
+            </li>
+            <li><a href="#about_providers" data-toggle="tab"><i class="fa fa-database"></i>&nbsp;State Info</a>
+            </li>
+            <li><a href="#data_link" data-toggle="tab"><i class="fa fa-external-link"></i>&nbsp;Data link</a>
+            </li>
+            <li><a href="#plugins" data-toggle="tab"><i class="fa fa-globe"></i>&nbsp;Plugins</a>
+            </li>
+            <li><a href="#disclaimer" data-toggle="tab"><i class="fa fa-exclamation-circle"></i>&nbsp;Disclaimer</a>
+            </li>
+            <li><a href="#contacts" data-toggle="tab"><i class="fa fa-envelope"></i>&nbsp;Contacts</a>
+            </li>
+          </ul>
+          <div class="tab-content" id="aboutTabsContent">
+            <div class="tab-pane fade active in" id="about">
+              <!-- 08 Rename it -->
+              <img src="./images/marina/marina_small.jpg" id="marina" />
+              <br /> (credit: NOAA)
+              <br /> The Clean Marinas program is a partnership of private marina owners, government marina operators
+              and yacht clubs. It was developed to provide clean facilities to the boating community and protect
+              waterways from pollution (More detail:
+              <a href="http://coastalmanagement.noaa.gov/marinas.html" target="_blank">NOAA</a>).
+            </div>
+            <!-- Data Providers -->
+            <div id="about_providers" class="tab-pane fade">
+              More detailed information about clean marinas program is available for each state.
+              <br />
+              <br />
+              <i class="icon-external-link"></i><a href="http://www.cleanmarinas.org/" target="_blank"> Clean Texas
+                marina program</a>
+              <br />
+              <i class="icon-external-link"></i><a href="http://goo.gl/crnrY" target="_blank"> Lousiana clean marina
+                program</a>
+              <br />
+              <i class="icon-external-link"></i><a href="http://goo.gl/kUGzI" target="_blank"> Alabama-Mississippi clean
+                marina program</a>
+              <br />
+              <i class="icon-external-link"></i><a href="http://goo.gl/8upez" target="_blank"> Florida clean marina
+                program</a>
+              <br />
+            </div>
+            <!-- KML & RESTful service -->
+            <div id="data_link" class="tab-pane fade">
+              <div>
+                <div id="kml_dl">
+                  <!-- 10 Edit it -->
+                  <a href="https://gis.gcoos.org/arcgis/rest/services/Marina/Clean_Marina_WM/MapServer/generateKml"
+                    target="_blank" class="link">
+                    <img src="./images/download.png" />
+                    <span>Download KML</span>
+                  </a>
+                </div>
+                <br />
+                <div id="additional_desc">
+                  <!-- 11 Edit it -->
+                  <a href="https://gis.gcoos.org/arcgis/rest/services/Marina/Clean_Marina_WM/MapServer" target="_blank"
+                    class="link">
+                    <img src="./images/goto.png" />
+                    <span>Layer Info</span>
+                  </a>
+                </div>
+                <br />
+              </div>
+            </div>
+            <!-- Plugin Information -->
+            <div class="tab-pane fade" id="plugins">
+              <p>Inspired by <a href="https://github.com/bmcbride/bootleaf" target="_blank">BootLeaf</a>.</p>
+              <div class="panel panel-primary">
+                <div class="panel-heading">Features</div>
+                <ul class="list-group">
+                  <li class="list-group-item">Lightweight map application with <a href="http://leafletjs.com/"
+                      target="_blank">Leaflet</a></li>
+                  <li class="list-group-item">Fullscreen mobile-friendly map with responsive navbar and modal
+                    placeholders using <a href="http://getbootstrap.com" target="_blank">Bootstrap</li>
+                  <li class="list-group-item"><a href="http://dsjs.org" target="_blank">D3</a> loading of external
+                    GeoJSON/CSV files</li>
+                  <li class="list-group-item">Elegant client-side multi-layer feature search with autocomplete using <a
+                      href="http://twitter.github.io/typeahead.js/" target="_blank">typeahead.js</a>
+                  </li>
+                  <li class="list-group-item">Responsive sidebar feature list synced with map bounds, which includes
+                    sorting and filtering via <a href="http://listjs.com/" target="_blank">list.js</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <!-- Disclaimer -->
+            <div id="disclaimer" class="tab-pane fade text-danger">
+              <p>
+                <img src='./images/logo/gcoos_logo_600x202.jpg' style='left:50%; width:300px;' />
+              </p>
+              <p>All products published on this website are prototype products and are not intended to be used for
+                navigational or operational purposes. With respect to information available from this website, neither
+                GCOOS nor any of its members, employees
+                or agents makes any warranty, expressed or implied, including merchantability and fitness for a
+                particular purpose, or assumes any legal liability or responsibility for the accuracy, completeness or
+                usefulness of any information, apparatus,
+                product or process disclosed, or represents that its use does not infringe privately owned rights. The
+                user of these data and products assumes the entire risk related to use of these date and this web site.
+                In no event will GCOOS, its
+                agents, employees or members be liable to a user or any third party for any direct, indirect,
+                incidental, consequential, special or exemplary damages, loss of life or lost profits resulting from any
+                use, misuse or reliance on any of the
+                data or information appearing on this website.</p>
+            </div>
+            <!-- Contacts -->
+            <div class="tab-pane fade" id="contacts">
+              <!-- 15 Edit it including email address -->
+              <p>Any feedback is appreciated:
+              </p>
+              <p>Map Creator: <a href='mailto:shinichi.kobara@gcoos.org?Subject=Clean Marinas' target="_top">Shin Kobara
+                  - GCOOS</a></p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- /.modal -->
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-68186321-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-68186321-3');
+  </script>
+
+  <!-- base js: jquery, jquery-ui, bootstrap, d3, moment -->
+  <script src="./plugin/leaflet-0.7.3/leaflet.js"></script>
+  <script src="./libs/jquery.min.js"></script>
+  <script src="./libs/bootstrap.min.js"></script>
+  <script src="./libs/d3.min.js"></script>
+  <script src="./libs/moment/moment.min.js"></script>
+  <script src="./libs/queue.min.js"></script>
+  <!-- additional js: jquery-ui, query -->
+  <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+  <script src="./libs/typeahead.bundle.min.js"></script>
+  <script src="./libs/handlebars.min.js"></script>
+  <script src="./libs/list.min.js"></script>
+
+  <!-- map base js: leaflet plubins -->
+  <script src="./plugin/esri-leaflet/esri-leaflet.js"></script>
+  <script src="//cdn-geoweb.s3.amazonaws.com/esri-leaflet-geocoder/1.0.0-rc.4/esri-leaflet-geocoder.js"></script>
+  <script src="./plugin/plugin.multi.min.js"></script>
+  <!-- custom js -->
+  <script src="./js/bootmap.min.js"></script>
+
+</body>
+
+</html>
